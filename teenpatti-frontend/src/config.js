@@ -9,6 +9,7 @@ const teenpattiAdminMap = {
   "tenpatii.cutelive.site": "https://admin.cutelive.site/v1/",
   "tenpatii.eveninglive.pro": "https://admin.eveninglive.pro/",
   "tenpatii.smartlive.site": "https://admin.smartlive.site/",
+  "tenpatii.streamixlive.com": "https://admin.streamixlive.com/",
   localhost: "http://localhost:5000",
 };
 

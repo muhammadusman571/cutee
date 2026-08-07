@@ -12,6 +12,7 @@ const hostAdminMap = {
   "host.cutelive.site": "https://admin.cutelive.site/v1/",
   "host.eveninglive.pro": "https://admin.eveninglive.pro/",
   "host.smartlive.site": "https://admin.smartlive.site/",
+  "host.streamixlive.com": "https://admin.streamixlive.com/",
 };
 
 export const baseURL = `https://${hostname}` || "http://localhost:5005/";

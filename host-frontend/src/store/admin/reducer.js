@@ -1,6 +1,6 @@
 import setToken from "../../util/SetToken";
 
-import { key } from "../../util/Config";
+import { key } from "../../Config";
 import setDevKey from "../../util/SetDevKey";
 
 import {

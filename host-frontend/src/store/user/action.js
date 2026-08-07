@@ -5,7 +5,7 @@ import {
   GET_COINSELLER_UNIQUEID,
   CREATE_HOST_REQUEST,
 } from "./types";
-import { baseURL, key } from "../../util/Config";
+import { baseURL, key } from "../../Config";
 
 export const getUser = (agency_id) => (dispatch) => {
   axios

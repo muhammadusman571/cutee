@@ -2,7 +2,7 @@ import axios from "axios";
 import { Toast } from "../../util/Toast";
 
 import { GET_SELLER, SET_ADMIN, UNSET_ADMIN, UPDATE_PROFILE } from "./types";
-import { key } from "../../util/Config";
+import { key } from "../../Config";
 
 export const login = (data) => (dispatch) => {
   axios

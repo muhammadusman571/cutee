@@ -13,6 +13,7 @@ const ferrywheelAdminMap = {
   "garedy.cutelive.site": "https://admin.cutelive.site/v1/",
   "garedy.eveninglive.pro": "https://admin.eveninglive.pro/",
   "garedy.smartlive.site": "https://admin.smartlive.site/",
+  "garedy.streamixlive.com": "https://admin.streamixlive.com/",
 };
 
 export const baseURL = `https://${hostname}` || "http://localhost:5003/";

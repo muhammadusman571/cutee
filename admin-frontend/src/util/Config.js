@@ -18,6 +18,9 @@ if (hostname === "admin.fittolive.eagle-live.com") {
 } else if (hostname === "admin.smartlive.site") {
   baseURL = "https://admin.smartlive.site/";
   projectName = "Smart Live";
+} else if (hostname === "admin.streamixlive.com") {
+  baseURL = "https://admin.streamixlive.com/";
+  projectName = "Streamix Live";
 } else {
   // Default values (e.g., localhost)
   baseURL = "http://localhost:5000/";
