@@ -1,0 +1,134 @@
+import {
+  GET_GIFT,
+  CREATE_NEW_GIFT,
+  OPEN_GIFT_DIALOG,
+  CLOSE_GIFT_DIALOG,
+  EDIT_GIFT,
+  DELETE_GIFT,
+  OPEN_SVGA_DIALOG,
+  CLOSE_SVGA_DIALOG,
+  CREATE_NEW_GIFT_SVGA,
+  OPEN_LUCKY_GIFT_DIALOG,
+  CLOSE_LUCKY_GIFT_DIALOG,
+  SET_LUCKY_GIFT,
+  CREATE_NEW_LUCKY_GIFT,
+} from "./types";
+
+const initialState = {
+  gift: [],
+  dialog: false,
+  dialogData: null,
+  dialog1: false,
+  dialogData1: null,
+  luckyData: null,
+
+  luckyDialog: false,
+  luckyDialogData: null,
+};
+
+const giftReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case GET_GIFT:
+      return {
+        ...state,
+        gift: action.payload,
+      };
+    case CREATE_NEW_GIFT:
+      const data = [...state.gift, ...action.payload];
+      return {
+        ...state,
+        gift: data,
+      };
+    case CREATE_NEW_GIFT_SVGA:
+      const updatedGiftArray = state.gift.map((giftCategory) => {
+        if (giftCategory?._id === action.payload.categoryID) {
+          return {
+            ...giftCategory,
+            gift: [...giftCategory.gift, action.payload.giftData],
+          };
+        }
+        return giftCategory;
+      });
+      return {
+        ...state,
+        gift: updatedGiftArray,
+      };
+    case SET_LUCKY_GIFT:
+      return {
+        ...state,
+        luckyData: action.payload,
+      };
+    case EDIT_GIFT:
+      const updatedGiftArrayEdit = state.gift.map((giftCategory) => {
+        return {
+          ...giftCategory,
+          gift: giftCategory.gift.map((g) =>
+            g._id === action.payload.id ? action.payload.data : g,
+          ),
+        };
+      });
+
+      return {
+        ...state,
+        gift: updatedGiftArrayEdit,
+      };
+    case DELETE_GIFT:
+      return {
+        ...state,
+        gift: state.gift.map((gift) => {
+          return {
+            ...gift,
+            gift: gift.gift.filter((g) => g._id !== action.payload),
+          };
+        }),
+      };
+    case OPEN_GIFT_DIALOG:
+      return {
+        ...state,
+        dialog: true,
+        dialogData: action.payload || null,
+      };
+    case CLOSE_GIFT_DIALOG:
+      return {
+        ...state,
+        dialog: false,
+        dialogData: null,
+      };
+    case OPEN_SVGA_DIALOG:
+      return {
+        ...state,
+        dialog1: true,
+        dialogData1: action.payload || null,
+      };
+
+    case OPEN_LUCKY_GIFT_DIALOG:
+      return {
+        ...state,
+        luckyDialog: true,
+        luckyDialogData: action.payload || { percentage: 10 },
+      };
+
+    case CLOSE_LUCKY_GIFT_DIALOG:
+      return {
+        ...state,
+        luckyDialog: false,
+        luckyDialogData: null,
+      };
+    case CLOSE_SVGA_DIALOG:
+      return {
+        ...state,
+        dialog1: false,
+        dialogData1: null,
+      };
+    case CREATE_NEW_LUCKY_GIFT:
+      return {
+        ...state,
+        luckyData: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export default giftReducer;

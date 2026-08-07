@@ -1,0 +1,13 @@
+export const GET_SVIP_GIF = "GET_SVIP_GIF";
+
+export const OPEN_DIALOGUE_SVIP = "OPEN_DIALOGUE_SVIP";
+
+export const CLOSE_DIALOGUE_SVIP = "CLOSE_DIALOGUE_SVIP";
+
+export const CERATE_SVIP_GIF = "CERATE_SVIP_GIF";
+
+export const UPDATE_SVIP_GIF = "UPDATE_SVIP_GIF";
+
+export const DELETE_SVIP_GIF = "DELETE_SVIP_GIF";
+
+export const DELETE_SVIP_FIELD = "DELETE_SVIP_FIELD";

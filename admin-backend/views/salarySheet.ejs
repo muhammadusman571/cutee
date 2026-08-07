@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Salary Sheet</title>
+    <style>
+      body {
+          width: 100%;
+          height: 100%;
+          background-size: cover;
+          background-attachment: fixed;
+          margin: 0;
+          padding: 0;
+          background-image: url("https://admin.fittolive.eagle-live.com/static/media/login.24b5ccffd0525d34f243.png");
+      }
+      h1 {
+        text-align: center;
+        color:#f5365c
+      }
+      table {
+        width: 100%;
+        max-width: 1400px;
+        border-collapse: collapse;
+        margin: 20px auto 0 auto;
+        border-radius: 20px;
+        overflow:hidden;
+        padding:6px;
+      }
+
+      th, td {
+        border: 1px solid #333;
+        padding: 8px;
+        text-align: center;
+        color:#fff
+      }
+      th {
+        background-color: #f5365c;
+      }
+   
+    </style>
+  </head>
+  <body>
+    <h1>Salary Sheet - <%= month %> <%= year %></h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>User ID</th>
+          <th>Target</th>
+          <th>R Coin</th>
+          <th>Basic $</th>
+          <th>Diamond $</th>
+          <th>Total $</th>
+          <th>Agency Share</th>
+          <th>Days/Time</th>
+        </tr>
+      </thead>
+  <tbody>
+  <% sheets.forEach(sheet => { %>
+    <tr>
+      <td style="color:black;"><%= sheet.user.name %></td>
+      <td style="color:black;"><%= sheet.user.userId %></td>
+      <td style="color:black;"><%= sheet.target %></td>
+            <td style="color:black;"><%= sheet.rcoin %></td>
+    
+      <td style="color:black;">$<%= sheet.basic_salary %></td>
+      <td style="color:black;">$<%= sheet.diamond_share %></td>
+      <td style="color:black;">$<%= sheet.total_salary %></td>
+      <td style="color:black;">$<%= sheet.agency_share %></td>
+      <td style="color:black;"><%= sheet.day_time %></td>
+    </tr>
+  <% }) %>
+</tbody>
+    </table>
+  </body>
+</html>

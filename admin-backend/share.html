@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Opening Light Live...</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .box {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 350px;
+      }
+
+      h2 {
+        color: #7209b7;
+      }
+
+      .btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 25px;
+        background: #7209b7;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <h2>Opening Light Live...</h2>
+      <p>Please wait...</p>
+
+      <a id="openBtn" class="btn">Open App</a>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+
+      const type = params.get("type") || "LIVE";
+      const id = params.get("id");
+
+      if (!id) {
+        document.body.innerHTML = "<h2>Invalid Share Link</h2>";
+      } else {
+        const deepLink = `cutelive://share?type=${type}&id=${id}`;
+
+        document.getElementById("openBtn").href = deepLink;
+
+        // Auto Open
+        window.location.href = deepLink;
+
+        // Agar app install na ho to button use kare
+        setTimeout(() => {
+          document.getElementById("openBtn").style.display = "inline-block";
+        }, 1500);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,350 @@
+import React, { useEffect, useState } from "react";
+
+//jquery
+import $ from "jquery";
+
+//redux
+import { connect, useDispatch, useSelector } from "react-redux";
+
+//action
+import { deleteVideo, getFakeVideo } from "../../store/video/action";
+
+//routing
+import { Link, useNavigate } from "react-router-dom";
+
+// dayjs
+import dayjs from "dayjs";
+
+// base url
+import { baseURL } from "../../util/Config";
+
+import {  warning, alert } from "../../util/Alert";
+
+//pagination
+import Pagination from "../../pages/Pagination";
+
+//MUI icon
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+//Date Range Picker
+import { DateRangePicker } from "react-date-range";
+//Calendar Css
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css file
+
+//image
+import noImage from "../../assets/images/noImage.png";
+
+const FakeVideo = (props) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [data, setData] = useState([]);
+  const [activePage, setActivePage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [date, setDate] = useState([]);
+  const [ search , setSearch] = useState()
+  const [sDate, setsDate] = useState("ALL");
+  const [eDate, seteDate] = useState("ALL");
+
+  useEffect(() => {
+    $("#card").click(() => {
+      $("#datePicker").removeClass("show");
+    });
+  }, []);
+
+  useEffect(() => {
+    dispatch(getFakeVideo(null, activePage, rowsPerPage, sDate, eDate));
+  }, [dispatch, activePage, rowsPerPage, sDate, eDate, 1]);
+
+  const { video, totalVideo } = useSelector((state) => state.video);
+
+
+  useEffect(() => {
+    setData(video);
+  }, [video]);
+
+  useEffect(() => {
+    if (date.length === 0) {
+      setDate([
+        {
+          startDate: new Date(),
+          endDate: new Date(),
+          key: "selection",
+        },
+      ]);
+    }
+    $("#datePicker").removeClass("show");
+    setData(video);
+  }, [date, video]);
+
+  const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
+  };
+
+  const handleRowsPerPage = (value) => {
+    setActivePage(1);
+    setRowsPerPage(value);
+  };
+
+  const handleDelete = (videoId) => {
+   
+
+    const data = warning();
+    data
+      .then((isDeleted) => {
+        if (isDeleted) {
+         
+          props.deleteVideo(videoId);
+          alert("Deleted!", `Relite has been deleted!`, "success");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const getAllVideo = () => {
+    setActivePage(1);
+    setsDate("ALL");
+    seteDate("ALL");
+    $("#datePicker").removeClass("show");
+    dispatch(getFakeVideo(null, activePage, rowsPerPage, sDate, eDate, "Fake"));
+  };
+
+  const collapsedDatePicker = () => {
+    $("#datePicker").toggleClass("collapse");
+  };
+
+  const handleVideoDetail = (videoId) => {
+    navigate("/admin/video/detail", { state: videoId });
+  };
+
+  const handleOpen = () => {
+   
+
+    sessionStorage.removeItem("fakeRelite");
+    navigate("/admin/video/dialog");
+  };
+
+  const handleEdit = (data) => {
+   
+
+    sessionStorage.setItem("fakeRelite", JSON.stringify(data));
+    navigate("/admin/video/dialog");
+  };
+
+  return (
+    <>
+      <div className="page-title">
+        {props.type !== "fakeVideo" && (
+          <div className="row">
+            <div className="col-12 col-md-6 order-md-1 order-last">
+              <h3 className="mb-3 text-muted">Fake Relite</h3>
+            </div>
+            <div className="col-12 col-md-6 order-md-2 order-first">
+              <nav
+                aria-label="breadcrumb"
+                className="breadcrumb-header float-start float-lg-end"
+              >
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item">
+                    <Link to="/admin/dashboard" className="text-danger">
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Fake Relite
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="row">
+        <div className="col">
+          <div className="card" id="card">
+            <div className="card-header pb-0">
+              <div className="row my-3">
+                <div className="col-xs-12 col-sm-12 col-md-6 col-lg-8 float-left">
+                  <button
+                    type="button"
+                    className="btn  btn-primary btn-sm"
+                    onClick={handleOpen}
+                    id="bannerDialog"
+                  >
+                    <i className="fa fa-plus"></i>
+                    <span className="icon_margin">New</span>
+                  </button>
+                </div>
+                <div className="col-xs-12 col-sm-12 col-md-6 col-lg-4 float-right mt-3 mt-lg-0 mt-xl-0">
+                  <form action="">
+                    <div className="input-group mb-3 border rounded-pill">
+                      <div className="input-group-prepend border-0">
+                        <div id="button-addon4" className="btn text-danger">
+                          <i className="fas fa-search mt-2"></i>
+                        </div>
+                      </div>
+                      <input
+                        type="search"
+                        placeholder="What're you searching for?"
+                        aria-describedby="button-addon4"
+                        className="form-control bg-none border-0 rounded-pill searchBar"
+                        onChange={(e) => setSearch(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            dispatch(
+                              getFakeVideo(
+                                null,
+                                activePage,
+                                rowsPerPage,
+                                sDate,
+                                eDate,
+                                e.target.value
+                              )
+                            );
+                            setActivePage(1);
+                          }
+                        }}
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div
+                  id="datePicker"
+                  className="collapse mt-5 pt-5"
+                  aria-expanded="false"
+                >
+                  <div className="container table-responsive">
+                    <div key={JSON.stringify(date)}>
+                      <DateRangePicker
+                        onChange={(item) => {
+                          setDate([item.selection]);
+                          const dayStart = dayjs(
+                            item.selection.startDate
+                          ).format("M/DD/YYYY");
+                          const dayEnd = dayjs(item.selection.endDate).format(
+                            "M/DD/YYYY"
+                          );
+                          setActivePage(1);
+                          setsDate(dayStart);
+                          seteDate(dayEnd);
+                          props.getPost(
+                            null,
+                            activePage,
+                            rowsPerPage,
+                            sDate,
+                            eDate,
+                            "fake"
+                          );
+                        }}
+                        showSelectionPreview={true}
+                        moveRangeOnFirstSelection={false}
+                        ranges={date}
+                        direction="horizontal"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="card-body card-overflow">
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Video</th>
+                    <th>Username</th>
+                    <th>Unique Id</th>
+                    <th>Location</th>
+                    <th>Like</th>
+                    <th>Comment</th>
+                    <th>Created At</th>
+                    <th>Detail</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.length > 0 ? (
+                    data.map((data, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>
+                            <video
+                              height="50px"
+                              width="50px"
+                              src={data.video}
+                              controls
+                              style={{
+                                boxShadow: "0 5px 15px 0 rgb(105 103 103 / 0%)",
+                                border: "2px solid #fff",
+                                borderRadius: 10,
+                                float: "left",
+                                objectFit: "cover",
+                              }}
+                            />
+                          </td>
+                          <td>{data?.userId?.username ? data?.userId?.username : "-"}</td>
+                          <td>{data?.userId?.uniqueId ? data?.userId?.uniqueId : "-"}</td>
+                          <td>{data?.location ? data?.location : "-"}</td>
+                          <td className="text-danger">{data?.like}</td>
+                          <td className="text-success">{data?.comment}</td>
+                          <td>{data?.date}</td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-info"
+                              onClick={() => handleVideoDetail(data?._id)}
+                            >
+                              Detail
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-sm text-white"
+                              onClick={() => handleEdit(data)}
+                              style={{ backgroundColor: "#fc9494" }}
+                            >
+                              Edit
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-danger"
+                              onClick={() => handleDelete(data._id)}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="10" align="center">
+                        Nothing to show!!
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+              <Pagination
+                activePage={activePage}
+                rowsPerPage={rowsPerPage}
+                userTotal={totalVideo}
+                handleRowsPerPage={handleRowsPerPage}
+                handlePageChange={handlePageChange}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default connect(null, { getFakeVideo, deleteVideo })(FakeVideo);

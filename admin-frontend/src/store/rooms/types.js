@@ -1,0 +1,4 @@
+export const GET_ROOMS = "GET_ROOMS";
+export const TOGGLE_PIN_ROOM = "TOGGLE_PIN_ROOM";
+export const TOGGLE_ROOM_ACTIVE = "TOGGLE_ROOM_ACTIVE";
+export const DELETE_ROOM = "DELETE_ROOM";
