@@ -13,6 +13,7 @@ const agencyAdminMap = {
   "agency.eveninglive.pro": "https://admin.eveninglive.pro/",
   "agency.smartlive.site": "https://admin.smartlive.site/",
   "agency.streamixlive.com": "https://admin.streamixlive.com/",
+  "agency.awaralive.com": "https://admin.awaralive.com/",
 };
 
 // Determine adminBaseURL based on agency hostname

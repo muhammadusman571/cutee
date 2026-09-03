@@ -12,6 +12,7 @@ const casinoAdminMap = {
   "casino.eveninglive.pro": "https://admin.eveninglive.pro/",
   "casino.smartlive.site": "https://admin.smartlive.site/",
   "casino.streamixlive.com": "https://admin.streamixlive.com/",
+  "casino.awaralive.com": "https://admin.awaralive.com/",
 };
 
 export const baseURL = `https://${hostname}` || "http://localhost:5002/";

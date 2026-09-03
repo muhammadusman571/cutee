@@ -10,6 +10,7 @@ const teenpattiAdminMap = {
   "tenpatii.eveninglive.pro": "https://admin.eveninglive.pro/",
   "tenpatii.smartlive.site": "https://admin.smartlive.site/",
   "tenpatii.streamixlive.com": "https://admin.streamixlive.com/",
+  "teenpatti.awaralive.com": "https://admin.awaralive.com/",
   localhost: "http://localhost:5000",
 };
 

@@ -1,0 +1,213 @@
+# --------------------------
+# Admin (5000)
+# --------------------------
+server {
+    server_name admin.smartlive.site www.admin.smartlive.site;
+
+    client_max_body_size 300M;
+
+    location / {
+        proxy_pass http://localhost:5000;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://localhost:5000/socket.io/;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
+        proxy_set_header Host $host;
+    }
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/admin.smartlive.site-0001/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/admin.smartlive.site-0001/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+# --------------------------
+# Agency (5004)
+# --------------------------
+server {
+    server_name agency.smartlive.site www.agency.smartlive.site;
+
+    client_max_body_size 300M;
+
+    location / {
+        proxy_pass http://localhost:5004;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://localhost:5004/socket.io/;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
+        proxy_set_header Host $host;
+    }
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/agency.smartlive.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/agency.smartlive.site/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+# --------------------------
+# Garedy (5003)
+# --------------------------
+server {
+    server_name garedy.smartlive.site www.garedy.smartlive.site;
+
+    client_max_body_size 300M;
+
+    location / {
+        proxy_pass http://localhost:5003;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://localhost:5003/socket.io/;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
+        proxy_set_header Host $host;
+    }
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/garedy.smartlive.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/garedy.smartlive.site/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+# --------------------------
+# Host (5005)
+# --------------------------
+server {
+    server_name host.smartlive.site www.host.smartlive.site;
+
+    client_max_body_size 300M;
+
+    location / {
+        proxy_pass http://localhost:5005;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://localhost:5005/socket.io/;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
+        proxy_set_header Host $host;
+    }
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/host.smartlive.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/host.smartlive.site/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+# --------------------------
+# Casino (5002)
+# --------------------------
+server {
+    server_name casino.smartlive.site www.casino.smartlive.site;
+
+    client_max_body_size 300M;
+
+    location / {
+        proxy_pass http://localhost:5002;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://localhost:5002/socket.io/;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
+        proxy_set_header Host $host;
+    }
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/casino.smartlive.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/casino.smartlive.site/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+# --------------------------
+# Teenpatti (5001)
+# --------------------------
+server {
+    server_name tenpatii.smartlive.site www.tenpatii.smartlive.site;
+
+    client_max_body_size 300M;
+
+    location / {
+        proxy_pass http://localhost:5001;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://localhost:5001/socket.io/;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+
+        proxy_set_header Host $host;
+    }
+
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/tenpatii.smartlive.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/tenpatii.smartlive.site/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+# --------------------------
+# HTTP Redirect ALL
+# --------------------------
+server {
+    listen 80;
+    server_name admin.smartlive.site www.admin.smartlive.site agency.smartlive.site www.agency.smartlive.site garedy.smartlive.site www.garedy.smartlive.site host.smartlive.site www.host.smartlive.site casino.smartlive.site www.casino.smartlive.site tenpatii.smartlive.site www.tenpatii.smartlive.site;
+
+    return 301 https://$host$request_uri;
+}
