@@ -111,14 +111,14 @@ global.updateSettingFile = (settingData) => {
 
 //route.js
 const Route = require("./route");
-app.get("/share", (req, res) => {
+app.get(["/share", "/v1/share"], (req, res) => {
   res.sendFile(path.join(__dirname, "share.html"));
 });
 
 app.use("/sud", SudRoute);
-if (process.env.BASE_URL === "https://admin.cutelive.site/")
-  app.use("/v1", Route);
-else app.use("/", Route);
+// Serve the API both with and without the /v1 prefix
+app.use("/v1", Route);
+app.use("/", Route);
 
 //socket.js
 require("./socket");

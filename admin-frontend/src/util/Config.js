@@ -14,7 +14,7 @@ if (hostname === "admin.fittolive.eagle-live.com") {
   projectName = "Follow Live";
 } else if (hostname === "admin.eveninglive.pro") {
   baseURL = "https://admin.eveninglive.pro/";
-  projectName = "Insaf Live";
+  projectName = "Hyper Live";
 } else if (hostname === "admin.smartlive.site") {
   baseURL = "https://admin.smartlive.site/";
   projectName = "Smart Live";
