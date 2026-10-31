@@ -232,4 +232,8 @@ route.use("/fansRanking", FansRankingRoute);
 
 const MonthlyEarningRoute = require("./server/monthlyEarning/monthlyEarning.route");
 route.use("/monthlyEarning", MonthlyEarningRoute);
+//reset balances route
+const ResetRoute = require("./server/reset/reset.route");
+route.use("/reset", ResetRoute);
+
 module.exports = route;

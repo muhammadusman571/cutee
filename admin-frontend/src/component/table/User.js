@@ -18,6 +18,10 @@ import { Link, useNavigate } from "react-router-dom";
 //MUI
 import { Tooltip } from "@mui/material";
 
+import axios from "axios";
+import swal from "sweetalert";
+import { Toast } from "../../util/Toast";
+
 // import arraySort from "array-sort";
 
 //image
@@ -49,8 +53,14 @@ import GiveFrameDialog from "../dialog/GiveFrameDialog";
 import GiveUploadTagDialog from "../dialog/GiveUploadTagDialog";
 import { OPEN_GIVE_UPLOAD_BADGE_DIALOGUE } from "../../store/uploadBadge/type";
 import GiveUploadBadgeDialog from "../dialog/GiveUploadBadgeDialog";
+import { useCurrentUser } from "../../context/CurrentUser";
 const UserTable = (props) => {
   const navigate = useNavigate();
+  const { profile: currentUser } = useCurrentUser();
+  // coin sellers reuse this page but must not see the balance reset buttons
+  const canResetBalances =
+    currentUser?.role &&
+    !["super_coin", "sub_coin_seller"].includes(currentUser.role);
   const maxDate = new Date();
   const dispatch = useDispatch();
   const { user, activeUser, male, female, totalUser } = useSelector(
@@ -280,6 +290,34 @@ const UserTable = (props) => {
     }
   };
 
+  // Zero a balance for everyone; admin must type RESET to confirm
+  const handleResetAll = async (type) => {
+    const what =
+      type === "rcoin" ? "R coins of ALL users and agencies" : "diamonds of ALL users";
+    const typed = await swal({
+      title: "Are you sure?",
+      text: `This sets the ${what} to 0. It cannot be undone.\nType RESET to confirm.`,
+      icon: "warning",
+      dangerMode: true,
+      content: "input",
+      buttons: ["Cancel", "Reset to 0"],
+    });
+    if (typed === null) return;
+    if (typed !== "RESET") return Toast("error", "Not reset: you must type RESET");
+
+    try {
+      const res = await axios.post(`reset/${type}`, { confirm: "RESET" });
+      if (res.data.status) {
+        Toast("success", res.data.message);
+        dispatch(getUser(activePage, rowsPerPage, search, sDate, eDate));
+      } else {
+        Toast("error", res.data.message || "Reset failed");
+      }
+    } catch (error) {
+      Toast("error", error?.response?.data?.message || error.message);
+    }
+  };
+
   return (
     <>
       <div className="page-title">
@@ -288,6 +326,22 @@ const UserTable = (props) => {
             <h3 className="mb-3 text-light" style={{ color: "#e4eeff" }}>
               User
             </h3>
+            {canResetBalances && (
+              <div className="d-flex flex-wrap gap-2 mb-3">
+                <button
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => handleResetAll("rcoin")}
+                >
+                  <i className="fas fa-undo me-1"></i> Reset all R Coins to 0
+                </button>
+                <button
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => handleResetAll("diamond")}
+                >
+                  <i className="fas fa-undo me-1"></i> Reset all Diamonds to 0
+                </button>
+              </div>
+            )}
           </div>
           <div className="col-12 col-md-6 order-md-2 order-first">
             <nav

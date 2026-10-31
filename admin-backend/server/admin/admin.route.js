@@ -73,6 +73,7 @@ router.post(
 
 router.get("/list", AdminMiddleware, AdminController.adminList);
 router.patch("/status/:id", AdminMiddleware, AdminController.toggleAdminStatus);
+router.delete("/:id", AdminMiddleware, AdminController.deleteAdmin);
 
 router.get(
   "/all-sub-seller/:id",

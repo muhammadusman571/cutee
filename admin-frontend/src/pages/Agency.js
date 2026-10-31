@@ -9,6 +9,7 @@ import {
   enableDisableAgency,
   redeemEnableAgency,
   getSalarySheet,
+  deleteAgency,
 } from "../store/agency/action";
 
 //routing
@@ -29,6 +30,8 @@ import Pagination from "./Pagination";
 import { Toast } from "../util/Toast";
 import { useCurrentUser } from "../context/CurrentUser";
 import { baseURL } from "../util/Config";
+import axios from "axios";
+import swal from "sweetalert";
 
 const AgencyDetails = (props) => {
   const dispatch = useDispatch();
@@ -40,6 +43,9 @@ const AgencyDetails = (props) => {
   const [copied, setCopied] = useState(false);
 
   const { profile: currentUser } = useCurrentUser(); // assuming auth state
+  const isCoinSeller = ["super_coin", "sub_coin_seller"].includes(
+    currentUser?.role
+  );
 
   useEffect(() => {
     dispatch(getAgency(activePage, rowsPerPage, search));
@@ -95,14 +101,10 @@ const AgencyDetails = (props) => {
     dispatch({ type: OPEN_AGENCY_DIALOG });
   };
 
-  const handleDelete = (planId) => {
-    const data = warning();
-    data
+  const handleDelete = (agency) => {
+    warning()
       .then((isDeleted) => {
-        if (isDeleted) {
-          props.enableDisableAgency(planId);
-          alert("Deleted!", `Plan has been deleted!`, "success");
-        }
+        if (isDeleted) dispatch(deleteAgency(agency._id));
       })
       .catch((err) => console.log(err));
   };
@@ -141,12 +143,46 @@ const AgencyDetails = (props) => {
       });
   };
 
+  // Zero R coins of every agency; admin must type RESET to confirm
+  const handleResetAgencyRcoin = async () => {
+    const typed = await swal({
+      title: "Are you sure?",
+      text: "This sets the R coins of ALL agencies to 0. It cannot be undone.\nType RESET to confirm.",
+      icon: "warning",
+      dangerMode: true,
+      content: "input",
+      buttons: ["Cancel", "Reset to 0"],
+    });
+    if (typed === null) return;
+    if (typed !== "RESET") return Toast("error", "Not reset: you must type RESET");
+
+    try {
+      const res = await axios.post("reset/agency-rcoin", { confirm: "RESET" });
+      if (res.data.status) {
+        Toast("success", res.data.message);
+        dispatch(getAgency(activePage, rowsPerPage, search));
+      } else {
+        Toast("error", res.data.message || "Reset failed");
+      }
+    } catch (error) {
+      Toast("error", error?.response?.data?.message || error.message);
+    }
+  };
+
   return (
     <>
       <div className="page-title">
         <div className="row">
           <div className="col-12 col-md-6 order-md-1 order-last">
             <h3 className="mb-3 text-white">Agency</h3>
+            {currentUser?.role && !isCoinSeller && (
+              <button
+                className="btn btn-sm btn-outline-danger mb-3"
+                onClick={handleResetAgencyRcoin}
+              >
+                <i className="fas fa-undo me-1"></i> Reset all Agency R Coins to 0
+              </button>
+            )}
           </div>
           <div className="col-12 col-md-6 order-md-2 order-first">
             <nav
@@ -360,6 +396,17 @@ const AgencyDetails = (props) => {
                                 <i className="fa fa-file-pdf fa-lg"></i>
                               </button>
                             </Tooltip>
+                            {currentUser?.role && !isCoinSeller && (
+                              <Tooltip title="Delete">
+                                <button
+                                  type="button"
+                                  className="btn btn-sm btn-danger ms-1"
+                                  onClick={() => handleDelete(data)}
+                                >
+                                  <i className="fa fa-trash fa-lg"></i>
+                                </button>
+                              </Tooltip>
+                            )}
                           </td>
 
                           <td>

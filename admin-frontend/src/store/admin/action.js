@@ -61,6 +61,18 @@ export const toggleAdminStatus = (id, status) => async (dispatch) => {
   }
 };
 
+// Delete admin; resolves true on success so the list can be refreshed
+export const deleteAdmin = (id) => async () => {
+  try {
+    const res = await axios.delete(`/admin/${id}`);
+    Toast(res.data.status ? "success" : "error", res.data.message);
+    return res.data.status;
+  } catch (err) {
+    Toast("error", err?.response?.data?.message || err.message);
+    return false;
+  }
+};
+
 export const signupAdmin = (signup) => (dispatch) => {
   axios
     .post("/admin/signup", signup)

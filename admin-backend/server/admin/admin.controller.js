@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const config = require("../../config");
 const { compressImage } = require("../../util/compressImage");
 const CoinHistory = require("./../coinSeller/coinHistory.model");
+const Agency = require("../agency/agency.model");
+const mongoose = require("mongoose");
 
 //resend
 const { Resend } = require("resend");
@@ -727,6 +729,73 @@ exports.toggleAdminStatus = async (req, res) => {
       .json({ status: false, message: err.message || "Server Error" });
   }
 };
+// delete an admin / super admin / management account (refused while it still owns agencies or admins)
+exports.deleteAdmin = async (req, res) => {
+  try {
+    const current = req.admin;
+    const { id } = req.params;
+
+    if (!["owner", "super_admin", "management"].includes(current.role)) {
+      return res.status(403).json({ status: false, message: "Forbidden" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(200).json({ status: false, message: "Invalid id." });
+    }
+    if (id === current._id.toString()) {
+      return res
+        .status(200)
+        .json({ status: false, message: "You can't delete yourself." });
+    }
+
+    const target = await Admin.findById(id);
+    if (!target)
+      return res
+        .status(404)
+        .json({ status: false, message: "Admin not found" });
+
+    if (["owner", "super_coin", "sub_coin_seller"].includes(target.role)) {
+      return res.status(200).json({
+        status: false,
+        message: "This account can't be deleted from here.",
+      });
+    }
+
+    // super_admin / management may only delete admins they created (same rule as adminList)
+    if (
+      current.role !== "owner" &&
+      (target.role !== "admin" ||
+        target.ref?.toString() !== current._id.toString())
+    ) {
+      return res.status(403).json({ status: false, message: "Forbidden" });
+    }
+
+    const [agencies, subAdmins] = await Promise.all([
+      Agency.countDocuments({ ref: target._id }),
+      Admin.countDocuments({ ref: target._id }),
+    ]);
+    if (agencies > 0 || subAdmins > 0) {
+      return res.status(200).json({
+        status: false,
+        message: `This admin still has ${agencies} agency(ies) and ${subAdmins} admin(s). Move or delete them first.`,
+      });
+    }
+
+    await Admin.deleteOne({ _id: target._id });
+    console.log(
+      `[admin] ${target._id} (${target.email}, ${target.role}) deleted by ${current._id}`,
+    );
+
+    return res
+      .status(200)
+      .json({ status: true, message: "Admin deleted.", id: target._id });
+  } catch (err) {
+    console.error("deleteAdmin error:", err);
+    return res
+      .status(500)
+      .json({ status: false, message: err.message || "Server Error" });
+  }
+};
+
 exports.registerSuperCoinSeller = async (req, res) => {
   try {
     const user = req.admin;

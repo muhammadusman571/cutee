@@ -200,6 +200,79 @@ exports.activeOrNot = async (req, res) => {
   }
 };
 
+//delete agency (refused while it still has hosts)
+exports.destroy = async (req, res) => {
+  try {
+    const user = req.admin;
+    if (!["owner", "super_admin", "admin"].includes(user.role)) {
+      return res
+        .status(403)
+        .json({ status: false, message: "Unauthorized access" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.agencyId)) {
+      return res
+        .status(200)
+        .json({ status: false, message: "Invalid agency id." });
+    }
+
+    const agency = await Agency.findById(req.params.agencyId);
+    if (!agency) {
+      return res
+        .status(200)
+        .json({ status: false, message: "Agency not Found." });
+    }
+
+    // Same visibility as index: super_admin covers its own admins' agencies, admin only its own
+    if (user.role !== "owner") {
+      const refIds = [user._id.toString()];
+      if (user.role === "super_admin") {
+        const admins = await Admin.find({ ref: user._id }).select("_id");
+        admins.forEach((admin) => refIds.push(admin._id.toString()));
+      }
+      if (!refIds.includes(agency.ref?.toString())) {
+        return res
+          .status(403)
+          .json({ status: false, message: "You can't delete this agency." });
+      }
+    }
+
+    const hosts = await User.countDocuments({
+      isHost: true,
+      hostAgency: agency._id,
+    });
+    if (hosts > 0) {
+      return res.status(200).json({
+        status: false,
+        message: `This agency still has ${hosts} host(s). Move or remove them first.`,
+      });
+    }
+
+    await Promise.all([
+      User.updateOne(
+        { _id: agency.user },
+        {
+          $set: { isAgency: false },
+          $unset: { agency: "", agencyCode: "", agencyLoginString: "" },
+        }
+      ),
+      Agency.deleteOne({ _id: agency._id }),
+    ]);
+    console.log(
+      `[agency] ${agency._id} (${agency.name}) deleted by admin ${user._id}`
+    );
+
+    return res
+      .status(200)
+      .json({ status: true, message: "Agency deleted.", agencyId: agency._id });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ status: false, error: error.message || "Internal server error" });
+  }
+};
+
 //get all agency
 exports.index = async (req, res) => {
   try {

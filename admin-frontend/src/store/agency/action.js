@@ -52,11 +52,18 @@ export const acceptAgency = (agencyId) => (dispatch) => {
 
 export const deleteAgency = (agencyId) => (dispatch) => {
   axios
-    .delete(`agency/declineAgency?agencyId=${agencyId}`)
+    .delete(`agency/${agencyId}`)
     .then((res) => {
-      dispatch({ type: ACCEPT_DECLINE_AGENCY, payload: agencyId });
+      if (res.data.status) {
+        dispatch({ type: ACCEPT_DECLINE_AGENCY, payload: agencyId });
+        Toast("success", res.data.message);
+      } else {
+        Toast("error", res.data.message);
+      }
     })
-    .catch((error) => console.log(error));
+    .catch((error) =>
+      Toast("error", error?.response?.data?.message || error.message)
+    );
 };
 
 export const getAgencyWiseHost = (id, start, limit, search) => (dispatch) => {

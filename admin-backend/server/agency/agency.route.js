@@ -29,6 +29,9 @@ router.patch(
 //active or not agency
 router.patch("/activeOrNot", adminMiddleware, AgencyController.activeOrNot);
 
+//delete agency
+router.delete("/:agencyId", adminMiddleware, AgencyController.destroy);
+
 //get all agency
 router.get("/index", adminMiddleware, AgencyController.index);
 

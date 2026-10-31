@@ -5,7 +5,11 @@ import $ from "jquery";
 import dayjs from "dayjs";
 import { Tooltip } from "@mui/material";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { getAdmins, toggleAdminStatus } from "../store/admin/action";
+import {
+  getAdmins,
+  toggleAdminStatus,
+  deleteAdmin,
+} from "../store/admin/action";
 import Pagination from "./Pagination";
 import Male from "../assets/images/male.png";
 import { alert, warning } from "../util/Alert";
@@ -91,6 +95,19 @@ const AdminList = (props) => {
   };
   const handleToggleStatus = (id, status) => {
     props.toggleAdminStatus(id, status);
+  };
+
+  const canDelete = ["owner", "super_admin", "management"].includes(
+    currentUser?.role
+  );
+  const handleDelete = (admin) => {
+    warning()
+      .then(async (isDeleted) => {
+        if (isDeleted && (await dispatch(deleteAdmin(admin._id)))) {
+          dispatch(getAdmins(activePage, rowsPerPage, search, roleFilter));
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -250,7 +267,7 @@ const AdminList = (props) => {
                       <th>Created At</th>
                       <th>Is Active</th>
                       <th>Agencies</th>
-                      {currentUser?.role === "Superadmin" && <th>Actions</th>}
+                      {canDelete && <th>Delete</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -318,6 +335,18 @@ const AdminList = (props) => {
                               </i>
                             </button>
                           </td>
+                          {canDelete && (
+                            <td>
+                              <Tooltip title="Delete">
+                                <button
+                                  className="btn btn-sm btn-danger"
+                                  onClick={() => handleDelete(admin)}
+                                >
+                                  <i className="fa fa-trash fa-lg"></i>
+                                </button>
+                              </Tooltip>
+                            </td>
+                          )}
                           {/* <td>
                             <span
                               className={`badge ${
