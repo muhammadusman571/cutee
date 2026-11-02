@@ -418,6 +418,10 @@ io.on("connect", async (socket) => {
           roomId: liveUser._id,
           diamonds: coin,
           giftCount,
+          agencyId:
+            (receiverUser.isHost && receiverUser.hostAgency) ||
+            (receiverUser.isAgency && receiverUser.agency) ||
+            null,
           createdAt: new Date(), // let mongoose auto-handle but good to be explicit
         });
         // Ensure room rCoin increases only if receiverUser matches liveUser

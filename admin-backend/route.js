@@ -236,4 +236,8 @@ route.use("/monthlyEarning", MonthlyEarningRoute);
 const ResetRoute = require("./server/reset/reset.route");
 route.use("/reset", ResetRoute);
 
+//agency ranking, members and profile stats (app)
+const AgencyRankingRoute = require("./server/agencyRanking/agencyRanking.route");
+route.use("/agencyRanking", AgencyRankingRoute);
+
 module.exports = route;

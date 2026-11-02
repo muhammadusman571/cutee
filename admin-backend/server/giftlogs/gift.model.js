@@ -33,6 +33,15 @@ const giftLogSchema = new mongoose.Schema(
       enum: ["room", "pk", "audio", "private"],
       default: "room",
     },
+
+    giftCount: { type: Number, default: 1 },
+
+    // receiver's agency at the time of the gift (host's agency, or the agency they own)
+    agencyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Agency",
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -44,5 +53,8 @@ const giftLogSchema = new mongoose.Schema(
 giftLogSchema.index({ createdAt: -1 });
 giftLogSchema.index({ senderId: 1 });
 giftLogSchema.index({ receiverId: 1 });
+giftLogSchema.index({ agencyId: 1, createdAt: -1 });
+giftLogSchema.index({ receiverId: 1, createdAt: -1 });
+giftLogSchema.index({ senderId: 1, createdAt: -1 });
 
 module.exports = mongoose.model("GiftLog", giftLogSchema);
